@@ -117,6 +117,12 @@ while True:
     # нажимаем на кнопку поиска адреса
     driver1.driver.find_element_by_id('CurrentFindAddress').click()
     time.sleep(random.randint(2, 3))
+    try:
+        driver1.driver.find_element_by_id('CurrentAddress_0').click()
+        time.sleep(2)
+    except:
+        pass
+
     # для скрола
     el1 = driver1.driver.find_element_by_id('Password')
     ActionChains(driver1.driver).move_to_element(el1).click(el1).perform()

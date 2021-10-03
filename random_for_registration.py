@@ -12,10 +12,7 @@ class RandomDateRegister:
     def get_email(self):
         '''Генерирует случайный email на основе имён'''
         post_fix = [
-            '@gmail.com',
             '@outlook.com',
-            '@hotmail.com',
-            '@yahoo.com'
         ]
 
         post_fix_ = random.choice(post_fix)

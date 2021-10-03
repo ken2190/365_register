@@ -71,6 +71,9 @@ while True:
 
     # ввод даты рождения
     day, month, year = user_data[3].split('.')
+    day = str(int(day))
+    month = str(int(month))
+
 
     select_obj_day = driver1.driver.find_element_by_id('DateOfBirthDay')
     driver1.select_element(select_obj_day, el_value=day)

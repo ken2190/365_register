@@ -44,10 +44,10 @@ class RandomDateRegister:
         alphabet = 'qwertyuiopasdfghjklzxcvbnm'
 
         password = ''
-        for i in range(3):
-            password += str(random.randint(0, 9))
-        for i in range(3):
-            password += random.choice(alphabet)
+
+        password += str(random.randint(0, 9))*3
+
+        password += random.choice(alphabet)*3
 
         return password
 
@@ -81,7 +81,7 @@ class RandomDateRegister:
 # r = RandomDateRegister("Sam Narm", 'Stevenson')
 # r.get_email()
 # r.get_phone()
-# r.get_password()
+# print(r.get_password())
 # r.get_pincode()
 
 

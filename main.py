@@ -21,9 +21,9 @@ except Exception as er:
 
 
 # c какой позиции читаем данные   1 -> вторая запись в таблице поле заголовков
-start_line = 5
+start_line = 6
 # c какой позиции записываем данные  2 -> вторая запись в таблице поле заголовков
-GoogleWriter1.current_row = 12
+GoogleWriter1.current_row = 13
 
 
 while True:

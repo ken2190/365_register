@@ -61,7 +61,6 @@ class FireFoxDriverWithVPN():
         # self.close_last_window()
 
         self.driver.set_page_load_timeout(75)
-        time.sleep(5)
 
         try:
             self.driver.get('https://www.bet365.com/')

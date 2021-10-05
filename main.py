@@ -225,7 +225,6 @@ while True:
     else:
         status_ = 'Порезан'
 
-    input('enter:')
 
     driver1.driver.close()
     driver1.driver.quit()
@@ -234,9 +233,6 @@ while True:
     # время
     current_date = datetime.datetime.now()
     current_date_string = current_date.strftime('%m.%d.%Y')
-
-    # number
-
 
     data_ = [
         str(current_date_string), # time now

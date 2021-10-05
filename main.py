@@ -23,7 +23,8 @@ except Exception as er:
 # c какой позиции читаем данные   1 -> вторая запись в таблице поле заголовков
 start_line = 5
 # c какой позиции записываем данные  2 -> вторая запись в таблице поле заголовков
-GoogleWriter1.current_row = 6
+GoogleWriter1.current_row = 12
+
 
 while True:
     if start_line >= len(sheet_user_values):
@@ -39,15 +40,11 @@ while True:
         print('Restart driver, er:', er)
         continue
 
-    # перезвпускаем драйвер, если этот не работает
-    if driver1.is_break:
-        driver1.driver.close()
-        driver1.driver.quit()
-        continue
 
     try:
         driver1.start_registration()
     except:
+        print('Не удолось начать регистрировать аккаунт')
         driver1.driver.close()
         driver1.driver.quit()
         continue
@@ -197,6 +194,27 @@ while True:
         frame = driver1.driver.find_element_by_id('MembersIframe')
         driver1.driver.switch_to.frame(frame)
         driver1.driver.find_element_by_class_name('nh-NavigationHeaderModule_Title ')
+        no_valid_flag = False
+
+        # try:
+        #     frame2 = driver1.driver.find_element_by_id('MembersHostFrame')
+        #     driver1.driver.switch_to.frame(frame2)
+        #     driver1.driver.find_element_by_class_name('pm-debitcard')
+        #     print('порезан1')
+        #     no_valid_flag = True
+        # except:
+        #     pass
+        try:
+            frame2 = driver1.driver.find_element_by_id('MembersHostFrame')
+            driver1.driver.switch_to.frame(frame2)
+            driver1.driver.find_element_by_class_name('withdrawal-restriction')
+            print('порезан2')
+            no_valid_flag = True
+        except:
+            pass
+
+        if no_valid_flag:
+            raise Exception('Не рабочий аккунт')
         print('Рабочий аккаунт')
         is_good = True
     except:
@@ -206,6 +224,8 @@ while True:
         status_ = 'Готов к работе'
     else:
         status_ = 'Порезан'
+
+    input('enter:')
 
     driver1.driver.close()
     driver1.driver.quit()
@@ -228,6 +248,7 @@ while True:
         email_, # email
         status_
     ]
+    print(data_)
     GoogleWriter1.write_row(data_)
 
     print(f'Аккаунт {start_line-1}/{len(sheet_user_values)-1} успешно обработан', '-'*100)

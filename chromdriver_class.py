@@ -12,15 +12,15 @@ from selenium.webdriver.common.keys import Keys
 from threading import Thread
 
 
-def open_window(driver):
-    time.sleep(1)
-    driver.open_new_window_2ip()
+# def open_window(driver):
+#     time.sleep(1)
+#     driver.open_new_window_2ip()
+#     time.sleep(7)
 
 
 class FireFoxDriverWithVPN():
     def __init__(self):
         self.is_VPN = True
-        self.is_break = False
         firefox_capabilities = webdriver.DesiredCapabilities.FIREFOX
         firefox_capabilities['marionette'] = True
 
@@ -35,60 +35,44 @@ class FireFoxDriverWithVPN():
         binary = data.firefox_binary
         options.binary = binary
 
-
         driver = webdriver.Firefox(capabilities=firefox_capabilities, firefox_profile=fp,
                                    firefox_binary=data.firefox_binary,
                                    executable_path=data.path_to_geckodriver,
                                    options=options)
 
-
         self.driver = driver
-        self.driver.set_page_load_timeout(60)
+        self.driver.set_page_load_timeout(30)
         time.sleep(10)
 
-
         self.driver.get('https://2ip.ru/')
-        t1 = Thread(target=open_window, args=(self,))
-        t1.start()
+        # t1 = Thread(target=open_window, args=(self,))
+        # t1.start()
 
         try:
             self.driver.get('https://www.bet365.com/')
         except:
             print('Сайт не загружен')
-            time.sleep(20)
+            self.open_new_window_2ip()
+            time.sleep(15)
+            print('open-close')
 
         # закрываем 2 окно
-        time.sleep(15)
-        print('Закрываем 2 окно')
-        self.close_last_window()
+        # print('Закрываем 2 окно')
+        # self.close_last_window()
+
+        self.driver.set_page_load_timeout(75)
+        time.sleep(5)
 
         try:
             self.driver.get('https://www.bet365.com/')
         except:
             self.driver.close()
             self.driver.quit()
+            print('Сайт bet365 не загрузился')
             raise Exception('Сайт bet365 не загрузился')
 
-
-    def check_ip(self):
-        self.driver.get('https://www.bet365.com/')
-        for i in range(3):
-            try:
-                try:
-                    time.sleep(3)
-                    self.driver.find_element_by_class_name('hm-MainHeaderRHSLoggedOutWide_LoginContainer')
-                    print('[+] OK VPN')
-                    return True
-                except:
-                    print('wait...')
-            except:
-                pass
-        print('[-] Next one ...')
-
-        return False
-
     def start_registration(self):
-        time.sleep(2)
+        time.sleep(4)
         self.driver.find_element_by_class_name('hm-MainHeaderRHSLoggedOutWide_Join').click()
         time.sleep(10)
         self.driver.switch_to.frame(self.driver.find_element_by_class_name('mim-MembersIframeModule_Iframe '))
@@ -142,14 +126,20 @@ class FireFoxDriverWithVPN():
 
     def open_new_window_2ip(self):
         current_window = self.driver.current_window_handle
+        print('open site 2ip.ru')
         self.driver.execute_script(f"window.open('https://2ip.ru/', '_blank')")
+        time.sleep(5)
+        self.driver.switch_to.window(self.driver.window_handles[-1])
+        self.driver.close()
         self.driver.switch_to.window(current_window)
+
 
     def close_last_window(self):
         current_window = self.driver.current_window_handle
         self.driver.switch_to.window(self.driver.window_handles[-1])
         self.driver.close()
-        self.driver.switch_to.window(current_window)
+        # self.driver.switch_to.window(current_window)
+        self.driver.switch_to.default_content()
 
 
 

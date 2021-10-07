@@ -21,12 +21,18 @@ service = discovery.build('sheets', 'v4', http=httpAuth)
 spreadsheetId = data.sheet_id
 ranges = ["A1:G1000"]
 
-results = service.spreadsheets().values().batchGet(spreadsheetId=spreadsheetId,
-                                                   ranges=ranges,
-                                                   valueRenderOption='FORMATTED_VALUE',
-                                                   dateTimeRenderOption='FORMATTED_STRING').execute()
-sheet_user_values = results['valueRanges'][0]['values']
-print(sheet_user_values)
+try:
+    results = service.spreadsheets().values().batchGet(spreadsheetId=spreadsheetId,
+                                                       ranges=ranges,
+                                                       valueRenderOption='FORMATTED_VALUE',
+                                                       dateTimeRenderOption='FORMATTED_STRING').execute()
+    sheet_user_values = results['valueRanges'][0]['values']
+    print(sheet_user_values)
+except Exception as er:
+    print('Ошибка !')
+    print('Невозможно получить данные из гугл таблицы!')
+    print(er)
+    exit()
 
 
 

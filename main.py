@@ -120,6 +120,16 @@ while True:
         time.sleep(2)
     except:
         pass
+    # новое (17.12.2021) ввод города
+    time.sleep(1)
+    try:
+        driver1.driver.find_element_by_id('CurrentTownCity').click()
+        time.sleep(random.randint(2, 3))
+    except:
+        pass
+    driver1.human_input(user_data[5])
+
+    time.sleep(random.randint(1, 3))
 
     # для скрола
     el1 = driver1.driver.find_element_by_id('Password')

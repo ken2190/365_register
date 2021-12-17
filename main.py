@@ -4,7 +4,8 @@ import datetime
 
 from selenium.webdriver import ActionChains
 
-from chromdriver_class import FireFoxDriverWithVPN
+import data
+from chromdriver_class import FireFoxDriverWithVPN, FireFoxDriverWithVPN_multipotok_open
 from get_users_data_from_google_sheets import sheet_user_values
 from random_for_registration import RandomDateRegister
 from google_sheets_writer import GoogleWriter1
@@ -21,9 +22,9 @@ except Exception as er:
 
 
 # c какой позиции читаем данные   1 -> вторая запись в таблице поле заголовков :)
-start_line = 6
+start_line = 1
 # c какой позиции записываем данные  2 -> вторая запись в таблице поле заголовков
-GoogleWriter1.current_row = 13
+GoogleWriter1.current_row = 2
 
 
 while True:
@@ -35,7 +36,7 @@ while True:
     print(f'Обработка аккаунта {start_line}/{len(sheet_user_values)-1}', '-'*100)
 
     try:
-        driver1 = FireFoxDriverWithVPN()
+        driver1 = FireFoxDriverWithVPN_multipotok_open(data.firefox_profile_path)
     except Exception as er:
         print('Restart driver, er:', er)
         continue

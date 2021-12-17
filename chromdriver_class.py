@@ -1,15 +1,11 @@
-import pickle
-import threading
-import pyautogui
-import selenium
+from selenium.webdriver import ActionChains
+from selenium.webdriver.common.keys import Keys
+
 from selenium import webdriver
 import time
 import data
 import random
-from selenium.webdriver import ActionChains
-from selenium.webdriver.common.keys import Keys
-
-from threading import Thread
+from multiprocessing.dummy import Pool
 
 
 # def open_window(driver):
@@ -141,7 +137,129 @@ class FireFoxDriverWithVPN():
         self.driver.switch_to.default_content()
 
 
+class GetWorkAccounts:
+    def __init__(self, number_of_accounts, path_to_firefox_profile):
+        self.firefox_profile = path_to_firefox_profile
+        self.number_of_accounts = number_of_accounts
+
+        def check_bet365(driver):
+            # провепка правильно ли открылся сайт bet365
+            try:
+                time.sleep(2)
+                driver.find_element_by_class_name('hm-MainHeaderRHSLoggedOutWide_LoginContainer')
+                return True
+            except Exception as er:
+                return False
+
+        def open_new_window_2ip(driver):
+            current_window = driver.current_window_handle
+            driver.execute_script(f"window.open('https://2ip.ru/', '_blank')")
+            time.sleep(7)
+            driver.switch_to.window(driver.window_handles[-1])
+            driver.close()
+            driver.switch_to.window(current_window)
+
+        def get_driver():
+            firefox_capabilities = webdriver.DesiredCapabilities.FIREFOX
+            firefox_capabilities['marionette'] = True
+
+            fp = webdriver.FirefoxProfile(self.firefox_profile)
+            fp.set_preference("browser.privatebrowsing.autostart", True)
+
+            options = webdriver.FirefoxOptions()
+            options.add_argument("-private")
+            options.set_preference("dom.webdriver.enabled", False)
+            options.set_preference("dom.webnotifications.enabled", False)
+            binary = data.firefox_binary
+            options.binary = binary
+
+            driver = webdriver.Firefox(capabilities=firefox_capabilities, firefox_profile=fp,
+                                       firefox_binary=data.firefox_binary,
+                                       executable_path=data.path_to_geckodriver,
+                                       options=options)
+
+            time.sleep(10)
+
+            driver.get('https://2ip.ru/')
+            driver.set_page_load_timeout(15)
+            try:
+                driver.get('https://www.bet365.com/')
+                driver.set_page_load_timeout(25)
+                if check_bet365(driver):
+                    return driver, 'OK'
+            except:
+                pass
+
+            driver.set_page_load_timeout(25)
+            for i in range(2):
+                open_new_window_2ip(driver)
+                time.sleep(0.3)
+
+            try:
+                driver.get('https://www.bet365.com/')
+                if check_bet365(driver):
+                    return driver, 'OK'
+                else:
+                    return driver, 'Сайт bet365 не загрузился'
+            except:
+                return driver, 'Сайт bet365 не загрузился'
+
+        def add_accounts_to_list(Browsers_List=[]):
+            # задержка
+            time_to_sleep = random.randint(1, 1000) / 500
+            time.sleep(time_to_sleep)
+            driver, info = get_driver()
+            if info == 'OK':
+                Browsers_List.append(driver)
+                print('+1 browser')
+            else:
+                try:
+                    driver.close()
+                    driver.quit()
+                except:
+                    pass
+
+        # число браузеров, которое будет открыто
+        number_of_tries = 6
+        try:
+            number_of_tries = data.number_of_tries
+        except:
+            pass
+        Browser_List = []
+
+        while len(Browser_List) < self.number_of_accounts:
+            try:
+                with Pool(processes=number_of_tries) as p:
+                    p.map(add_accounts_to_list, [Browser_List for i in range(number_of_tries)])
+            except Exception as er:
+                print(f'Ошибка при выполнениии Poll: {er}')
+
+            # check_counter_i = 0
+            # while check_counter_i < len(Browser_List):
+            #     if check_bet365(Browser_List[check_counter_i]):
+            #         check_counter_i += 1
+            #     else:
+            #         print('Браузер не работает!')
+            #         Browser_List.pop(check_counter_i)
+
+            print(f'Открыто {len(Browser_List)} из {self.number_of_accounts} аккаунтов')
 
 
+        while len(Browser_List) > self.number_of_accounts:
+            Browser_List.pop(-1).quit()
+            print('1 лишний аккаунт удалён')
+
+        self.Browser_List = Browser_List
+
+    def return_Browser_List(self):
+        return self.Browser_List
+
+
+
+class FireFoxDriverWithVPN_multipotok_open(FireFoxDriverWithVPN):
+    def __init__(self, path_to_firefox_profile):
+        self.is_VPN = True
+        get_accounts_class = GetWorkAccounts(number_of_accounts=1, path_to_firefox_profile=path_to_firefox_profile)
+        self.driver = get_accounts_class.return_Browser_List()[0]
 
 

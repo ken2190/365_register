@@ -178,7 +178,7 @@ class ChromeDriver:
         time.sleep(0.3)
         for simvol in str(input_text):
             self.driver.find_element_by_tag_name("body").send_keys(simvol)
-            print(simvol)
+            # print(simvol)
             time.sleep(random.randint(15, 40) / 100)
         time.sleep(random.randint(1, 4))
 

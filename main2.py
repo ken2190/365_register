@@ -68,13 +68,15 @@ while True:
     # driver1.driver.find_element_by_id('FirstName').send_keys('123')
     # driver1.driver.find_element_by_id('FirstName').click()
     # driver1.human_input(user_data[1])
-    print(user_data)
-    print(user_data[1])
-    input('123')
+    # print(user_data)
+    # print(user_data[1])
+    # input('123')
 
     # ввод 2 имени
-    driver1.driver.find_element_by_id('Surname').click()
-    driver1.human_input(user_data[2])
+    elemen_Surname = driver1.driver.find_element_by_id('Surname')
+    driver1.human_input2_new(user_data[2], elemen_Surname)
+    # driver1.driver.find_element_by_id('Surname').click()
+    # driver1.human_input(user_data[2])
 
     # ввод даты рождения
     day, month, year = user_data[3].split('.')
@@ -100,26 +102,40 @@ while True:
     # заполнение email
     driver1.driver.find_element_by_id('EmailAddress').send_keys('')
     time.sleep(random.randint(10, 20)/10)
-    driver1.human_input(email_)
+    element_email = driver1.driver.find_element_by_id('EmailAddress')
+    driver1.human_input2_new(email_, element_email)
+    # driver1.human_input(email_)
     print(f'email: {email_}')
 
     # заполнение номера
     driver1.driver.find_element_by_id('PhoneNumber').send_keys('')
     time.sleep(random.randint(10, 20)/10)
-    driver1.human_input(phone_)
+    element_phone = driver1.driver.find_element_by_id('PhoneNumber')
+    driver1.human_input2_new(phone_, element_phone)
+    # driver1.human_input(phone_)
     # для скрола
     driver1.driver.find_element_by_id('Password').send_keys('')
     time.sleep(random.randint(2, 5))
 
     # заполнение адреса
-    driver1.driver.find_element_by_id('CurrentBuildingNumberSearch').send_keys('')
     adress_text = user_data[4].split(',')[0]
-    # print(adress_text)
-    driver1.human_input(adress_text)
+    element_CurrentBuildingNumberSearch = driver1.driver.find_element_by_id('CurrentBuildingNumberSearch')
+    driver1.driver.find_element_by_id('CurrentBuildingNumberSearch').send_keys('')
+    driver1.human_input2_new(adress_text, element_CurrentBuildingNumberSearch)
+    # driver1.human_input(adress_text)
+    time.sleep(2)
+
+    # street
+    # driver1.driver.find_element_by_id('CurrentStreetNameSearch').click()
+    element_CurrentBuildingNumberSearch = driver1.driver.find_element_by_id('CurrentStreetNameSearch')
+    driver1.human_input2_new(adress_text, element_CurrentBuildingNumberSearch)
+
     time.sleep(2)
     # index адреса
-    driver1.driver.find_element_by_id('CurrentPostcodeSearch').click()
-    driver1.human_input(user_data[6])
+    # driver1.driver.find_element_by_id('CurrentPostcodeSearch').click()
+    element_CurrentPostcodeSearch = driver1.driver.find_element_by_id('CurrentPostcodeSearch')
+    driver1.human_input2_new(user_data[6], element_CurrentBuildingNumberSearch)
+    # driver1.human_input(user_data[6])
     # нажимаем на кнопку поиска адреса
     driver1.driver.find_element_by_id('CurrentFindAddress').click()
     time.sleep(random.randint(5, 7))
@@ -129,13 +145,18 @@ while True:
     except:
         pass
     # новое (17.12.2021) ввод города
-    time.sleep(1)
+    # time.sleep(1)
+    # try:
+    #     driver1.driver.find_element_by_id('CurrentTownCity').click()
+    #     time.sleep(random.randint(2, 3))
+    # except:
+    #     pass
+    # driver1.human_input(user_data[5])
     try:
-        driver1.driver.find_element_by_id('CurrentTownCity').click()
-        time.sleep(random.randint(2, 3))
+        element_CurrentTownCity = driver1.driver.find_element_by_id('CurrentTownCity')
+        driver1.human_input2_new(user_data[5], element_CurrentTownCity)
     except:
-        pass
-    driver1.human_input(user_data[5])
+        print('Не удалось ввести город')
 
     time.sleep(random.randint(1, 3))
 
@@ -148,7 +169,9 @@ while True:
     # login + password
     driver1.driver.find_element_by_id('UserName').click()
     login_ = r.get_login()
-    driver1.human_input(login_)
+    # driver1.human_input(login_)
+    element_login = driver1.driver.find_element_by_id('UserName')
+    driver1.human_input2_new(login_, element_login)
     driver1.driver.find_element_by_id('Password').click()
     time.sleep(2)
     # ввод логина
@@ -159,7 +182,8 @@ while True:
             driver1.driver.find_element_by_id('UserName').clear()
             driver1.driver.find_element_by_id('UserName').send_keys('')
             login_ = r.get_more_random_login()
-            driver1.human_input(login_)
+            # driver1.human_input(login_)
+            driver1.human_input2_new(login_, element_login)
             time.sleep(1)
             driver1.driver.find_element_by_id('Password').click()
             time.sleep(2)
@@ -170,7 +194,9 @@ while True:
     time.sleep(random.randint(40, 50)/10)
     # ввод пароля
     driver1.driver.find_element_by_id('Password').click()
-    driver1.human_input(password_)
+    element_password = driver1.driver.find_element_by_id('Password')
+    driver1.human_input2_new(password_, element_password)
+    # driver1.human_input(password_)
     time.sleep(random.randint(40, 50)/10)
     print(f'password: {password_}')
 
@@ -184,12 +210,16 @@ while True:
     # ввод и повторение пина
     driver1.driver.find_element_by_id('FourDigitPin').click()
     time.sleep(random.randint(10, 30)/10)
-    driver1.human_input(pincode_)
+    element_pincode = driver1.driver.find_element_by_id('FourDigitPin')
+    driver1.human_input2_new(pincode_, element_pincode)
+    # driver1.human_input(pincode_)
     time.sleep(random.randint(5, 20)/10)
 
     driver1.driver.find_element_by_id('FourDigitPinConfirmed').click()
     time.sleep(random.randint(10, 30)/10)
-    driver1.human_input(pincode_)
+    # driver1.human_input(pincode_)
+    element_pincode2 = driver1.driver.find_element_by_id('FourDigitPinConfirmed')
+    driver1.human_input2_new(pincode_, element_pincode2)
     time.sleep(random.randint(20, 50)/10)
 
     print(f'pin: {pincode_}')

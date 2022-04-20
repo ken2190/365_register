@@ -118,23 +118,25 @@ while True:
     time.sleep(random.randint(2, 5))
 
     # заполнение адреса
-    adress_text = user_data[4].split(',')[0]
+    adress_text = user_data[4].split(' ')[0]
     element_CurrentBuildingNumberSearch = driver1.driver.find_element_by_id('CurrentBuildingNumberSearch')
     driver1.driver.find_element_by_id('CurrentBuildingNumberSearch').send_keys('')
     driver1.human_input2_new(adress_text, element_CurrentBuildingNumberSearch)
     # driver1.human_input(adress_text)
     time.sleep(2)
-
+    # input('1')
     # street
-    # driver1.driver.find_element_by_id('CurrentStreetNameSearch').click()
-    element_CurrentBuildingNumberSearch = driver1.driver.find_element_by_id('CurrentStreetNameSearch')
-    driver1.human_input2_new(adress_text, element_CurrentBuildingNumberSearch)
-
+    adress_text = user_data[4].split(' ')[1]
+    # print(adress_text)
+    element_CurrentStreetNameSearch = driver1.driver.find_element_by_id('CurrentStreetNameSearch')
+    driver1.human_input2_new(adress_text, element_CurrentStreetNameSearch)
     time.sleep(2)
+
     # index адреса
-    # driver1.driver.find_element_by_id('CurrentPostcodeSearch').click()
+    # input('Вводим postcode:')
+    driver1.driver.find_element_by_id('CurrentPostcodeSearch').click()
     element_CurrentPostcodeSearch = driver1.driver.find_element_by_id('CurrentPostcodeSearch')
-    driver1.human_input2_new(user_data[6], element_CurrentBuildingNumberSearch)
+    driver1.human_input2_new(user_data[6], element_CurrentPostcodeSearch)
     # driver1.human_input(user_data[6])
     # нажимаем на кнопку поиска адреса
     driver1.driver.find_element_by_id('CurrentFindAddress').click()
@@ -162,7 +164,7 @@ while True:
 
     # для скрола
     el1 = driver1.driver.find_element_by_id('Password')
-    ActionChains(driver1.driver).move_to_element(el1).click(el1).perform()
+    # ActionChains(driver1.driver).move_to_element(el1).click(el1).perform()
     driver1.driver.find_element_by_id('Password').send_keys('')
     time.sleep(random.randint(2, 3))
 
@@ -289,7 +291,7 @@ while True:
         login_, # login
         password_, # password
         pincode_, # pin
-        ' '.join(user_data), # трока с информацией о пользователе
+        ' '.join(user_data), # строка с информацией о пользователе
         email_, # email
         status_
     ]

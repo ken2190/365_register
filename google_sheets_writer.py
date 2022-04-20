@@ -46,4 +46,5 @@ class GoogleWriter:
 
 GoogleWriter1 = GoogleWriter()
 
+# GoogleWriter1.write_row(["Дата", "№", "Логин", "Пароль", "Пин", "Строка", "e-mail", "Статус"])
 

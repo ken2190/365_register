@@ -37,6 +37,14 @@ while True:
 
     driver1 = ChromeDriver()
 
+    driver1.driver.get('https://www.bet365.com/#/HO/')
+    time.sleep(10)
+    try:
+        # Cookies
+        driver1.driver.find_element_by_class_name('ccm-CookieConsentPopup_Accept ').click()
+    except:
+        pass
+
     try:
         driver1.start_registration()
     except:
@@ -55,8 +63,14 @@ while True:
         driver1.select_element(select_obj, el_visible_text='Mrs')
 
     # ввод 1 имени
-    driver1.driver.find_element_by_id('FirstName').click()
-    driver1.human_input(user_data[1])
+    element_fisrstName = driver1.driver.find_element_by_id('FirstName')
+    driver1.human_input2_new(user_data[1], element_fisrstName)
+    # driver1.driver.find_element_by_id('FirstName').send_keys('123')
+    # driver1.driver.find_element_by_id('FirstName').click()
+    # driver1.human_input(user_data[1])
+    print(user_data)
+    print(user_data[1])
+    input('123')
 
     # ввод 2 имени
     driver1.driver.find_element_by_id('Surname').click()

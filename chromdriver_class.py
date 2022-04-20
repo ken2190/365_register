@@ -151,6 +151,16 @@ class ChromeDriver:
         options.add_argument(f'user-data-dir={self.user_data_dir}')
         options.add_argument(f"profile-directory={self.profile_directory}")
         # options.add_argument(f"--incognito")
+        # options.add_argument(f'allow-profiles-outside-user-dir')
+
+        # options.add_argument('--allow-profiles-outside-user-dir')
+        # options.add_argument('--enable-profile-shortcut-manager')
+        options.add_argument('--profile-directory=Default-copy')
+        options.add_argument('--disable-blink-features=AutomationControlled')
+
+        # options.add_argument(r'user-data-dir=C:\Users\Sergey\AppData\Local\Google\Chrome\User Data\A_User')
+
+
         self.driver = webdriver.Chrome(options=options)
 
     def start_registration(self):
@@ -168,6 +178,17 @@ class ChromeDriver:
         time.sleep(0.3)
         for simvol in str(input_text):
             self.driver.find_element_by_tag_name("body").send_keys(simvol)
+            print(simvol)
+            time.sleep(random.randint(15, 40) / 100)
+        time.sleep(random.randint(1, 4))
+
+    def human_input2_new(self, input_text, element):
+        '''Вводит текс, предварительно нужно нажать на форму'''
+
+        time.sleep(0.3)
+        for simvol in str(input_text):
+            element.send_keys(simvol)
+            print(simvol)
             time.sleep(random.randint(15, 40) / 100)
         time.sleep(random.randint(1, 4))
 

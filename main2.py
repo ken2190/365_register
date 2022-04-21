@@ -23,7 +23,7 @@ except Exception as er:
 
 # c какой позиции читаем данные   1 -> вторая запись в таблице поле заголовков :)
 start_line = 1
-# c какой позиции записываем данные  2 -> вторая запись в таблице поле заголовков
+# c какой позиции записываем данные  1 -> вторая запись в таблице поле заголовков
 GoogleWriter1.current_row = 2
 
 
@@ -44,7 +44,7 @@ while True:
         driver1.driver.find_element_by_class_name('ccm-CookieConsentPopup_Accept ').click()
     except:
         pass
-
+    # input('k')
     try:
         driver1.start_registration()
     except:
@@ -126,7 +126,8 @@ while True:
     time.sleep(2)
     # input('1')
     # street
-    adress_text = user_data[4].split(' ')[1]
+    adress_text = user_data[4].split(' ')[1:]
+    adress_text = ' '.join(adress_text)
     # print(adress_text)
     element_CurrentStreetNameSearch = driver1.driver.find_element_by_id('CurrentStreetNameSearch')
     driver1.human_input2_new(adress_text, element_CurrentStreetNameSearch)
@@ -237,7 +238,7 @@ while True:
     # конец регистрации !
     driver1.driver.find_element_by_id('Submit').click()
     time.sleep(45)
-
+    # input('check:')
     is_good = False
     driver1.driver.switch_to.default_content()
 
@@ -258,6 +259,17 @@ while True:
         try:
             frame2 = driver1.driver.find_element_by_id('MembersHostFrame')
             driver1.driver.switch_to.frame(frame2)
+
+            # уже есть аккаунт
+            try:
+                driver1.driver.find_element_by_class_name('duplicateAccountLightBox')
+                print('уже есть аккаунт')
+                no_valid_flag = True
+                raise Exception('Не рабочий аккунт')
+            except:
+                pass
+
+
             driver1.driver.find_element_by_class_name('withdrawal-restriction')
             print('порезан2')
             no_valid_flag = True

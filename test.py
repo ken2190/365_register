@@ -49,3 +49,7 @@ ProfileDirWorker1.create_copy()
 # dst = r'D:\\dir12'
 #
 # copytree(path_to_chrome_user_dir, dst)
+'''
+3032648,,MR,STEVEN,,BLACK,01/01/1968,6 MIDVALE AVENUE,SHEFFIELD,,,,S6 3HJ,1998,E TR,15/10/2011,Y,N,N,Y,,N,,,124306,B,F,N,N,F,7889668452,DAWNBLACK01@GOOGLEMAIL.COM
+
+'''

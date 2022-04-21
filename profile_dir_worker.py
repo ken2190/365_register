@@ -42,7 +42,7 @@ def copytree(src, dst, symlinks=False, ignore=None):
 ProfileDirWorker1 = ProfileDirWorker(path_to_profile_dir=r'C:\Users\Sergey\AppData\Local\Google\Chrome\User Data',
                                      profile_name='Default')
 
-ProfileDirWorker1.create_copy()
+# ProfileDirWorker1.create_copy()
 # ProfileDirWorker1.del_copy()
 # path_to_chrome_user_dir = r'C:\Users\Sergey\AppData\Local\Google\Chrome\User Data\Default'
 #

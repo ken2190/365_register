@@ -53,6 +53,3 @@ ProfileDirWorker1 = ProfileDirWorker(path_to_profile_dir=r'C:\Users\Sergey\AppDa
 # dst = r'D:\\dir12'
 #
 # copytree(path_to_chrome_user_dir, dst)
-'''
-3032638,,MR,JOAO,,DEMETRIO,02/01/1988,9 PREVOST ROAD,LONDON,,,,N11 1EN,2006,E TR,15/10/2010,Y,N,N,Y,,N,,,452864,E,F,N,N,F,7702219186,IT.JOAO.DEMETRIO@GOOGLEMAIL.COM
-'''

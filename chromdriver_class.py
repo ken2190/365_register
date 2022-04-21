@@ -149,17 +149,16 @@ class ChromeDriver:
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option('useAutomationExtension', False)
         options.add_argument(f'user-data-dir={self.user_data_dir}')
-        options.add_argument(f"profile-directory={self.profile_directory}")
+        # options.add_argument(f"profile-directory={self.profile_directory}")
         # options.add_argument(f"--incognito")
         # options.add_argument(f'allow-profiles-outside-user-dir')
 
         # options.add_argument('--allow-profiles-outside-user-dir')
         # options.add_argument('--enable-profile-shortcut-manager')
-        options.add_argument('--profile-directory=Default-copy')
+        options.add_argument(f'--profile-directory={data.chrome_profile_name}-copy')
         options.add_argument('--disable-blink-features=AutomationControlled')
 
         # options.add_argument(r'user-data-dir=C:\Users\Sergey\AppData\Local\Google\Chrome\User Data\A_User')
-
 
         self.driver = webdriver.Chrome(options=options)
 

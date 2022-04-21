@@ -9,7 +9,7 @@ from chromdriver_class import ChromeDriver
 from get_users_data_from_google_sheets import sheet_user_values
 from random_for_registration import RandomDateRegister
 from google_sheets_writer import GoogleWriter1
-
+from profile_dir_worker import ProfileDirWorker1
 
 CURENT_NUMBER = 1000
 
@@ -20,12 +20,14 @@ except Exception as er:
     print('Ошибка, откройте доступ к странице')
     exit()
 
+#
+# # c какой позиции читаем данные   1 -> вторая запись в таблице поле заголовков :)
+# start_line = 1
+# # c какой позиции записываем данные  1 -> вторая запись в таблице поле заголовков
+# GoogleWriter1.current_row = 2
 
-# c какой позиции читаем данные   1 -> вторая запись в таблице поле заголовков :)
-start_line = 1
-# c какой позиции записываем данные  1 -> вторая запись в таблице поле заголовков
-GoogleWriter1.current_row = 2
-
+start_line = data.start_google_sheets_line - 1
+GoogleWriter1.current_row = data.start_google_sheets_line
 
 while True:
     if start_line >= len(sheet_user_values):
@@ -34,6 +36,9 @@ while True:
 
     user_data = sheet_user_values[start_line]
     print(f'Обработка аккаунта {start_line}/{len(sheet_user_values)-1}', '-'*100)
+
+    print('Создаём копию профиля---------------')
+    ProfileDirWorker1.create_copy()
 
     driver1 = ChromeDriver()
 
@@ -292,6 +297,9 @@ while True:
     driver1.driver.close()
     driver1.driver.quit()
     start_line += 1
+
+    print('Удаляем копию профиля---------------')
+    ProfileDirWorker1.del_copy()
 
     # время
     current_date = datetime.datetime.now()

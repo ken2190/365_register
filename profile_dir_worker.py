@@ -1,6 +1,8 @@
 import os
 import shutil
 
+import data
+
 
 class ProfileDirWorker:
     def __init__(self, path_to_profile_dir, profile_name, postfix='-copy'):
@@ -39,8 +41,8 @@ def copytree(src, dst, symlinks=False, ignore=None):
             #     pass
 
 
-ProfileDirWorker1 = ProfileDirWorker(path_to_profile_dir=r'C:\Users\Sergey\AppData\Local\Google\Chrome\User Data',
-                                     profile_name='Default')
+ProfileDirWorker1 = ProfileDirWorker(path_to_profile_dir=data.path_to_chrome_user_dir,
+                                     profile_name=data.chrome_profile_name)
 
 # пытаемся удалить директорию, если она есть
 try:

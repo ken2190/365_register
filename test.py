@@ -1,6 +1,7 @@
 import os
 import shutil
 
+import data
 from chromdriver_class import ChromeDriver
 
 
@@ -41,8 +42,8 @@ def copytree(src, dst, symlinks=False, ignore=None):
             #     pass
 
 
-ProfileDirWorker1 = ProfileDirWorker(path_to_profile_dir=r'C:\Users\Sergey\AppData\Local\Google\Chrome\User Data',
-                                     profile_name='Default')
+ProfileDirWorker1 = ProfileDirWorker(path_to_profile_dir=data.path_to_chrome_user_dir,
+                                     profile_name=data.chrome_profile_name)
 
 # ProfileDirWorker1.create_copy()
 # driver1 = ChromeDriver()

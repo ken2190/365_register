@@ -156,14 +156,8 @@ while True:
         time.sleep(2)
     except:
         pass
+
     # новое (17.12.2021) ввод города
-    # time.sleep(1)
-    # try:
-    #     driver1.driver.find_element_by_id('CurrentTownCity').click()
-    #     time.sleep(random.randint(2, 3))
-    # except:
-    #     pass
-    # driver1.human_input(user_data[5])
     try:
         element_CurrentTownCity = driver1.driver.find_element_by_id('CurrentTownCity')
         driver1.human_input2_new(user_data[5], element_CurrentTownCity)
@@ -257,14 +251,6 @@ while True:
         driver1.driver.find_element_by_class_name('nh-NavigationHeaderModule_Title ')
         no_valid_flag = False
 
-        # try:
-        #     frame2 = driver1.driver.find_element_by_id('MembersHostFrame')
-        #     driver1.driver.switch_to.frame(frame2)
-        #     driver1.driver.find_element_by_class_name('pm-debitcard')
-        #     print('порезан1')
-        #     no_valid_flag = True
-        # except:
-        #     pass
         try:
             frame2 = driver1.driver.find_element_by_id('MembersHostFrame')
             driver1.driver.switch_to.frame(frame2)
@@ -278,6 +264,13 @@ while True:
             except:
                 pass
 
+            try:
+                driver1.driver.find_element_by_class_name('payment-header-details-title')
+                print('блок внесите деньги - есть')
+            except:
+                print('блок внесите деньги - нет')
+                no_valid_flag = True
+                raise Exception('Не рабочий аккунт')
 
             driver1.driver.find_element_by_class_name('withdrawal-restriction')
             print('порезан2')

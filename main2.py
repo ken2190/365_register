@@ -150,7 +150,7 @@ while True:
     # driver1.human_input(user_data[6])
     # нажимаем на кнопку поиска адреса
     driver1.driver.find_element_by_id('CurrentFindAddress').click()
-    time.sleep(random.randint(5, 7))
+    time.sleep(random.randint(10, 12))
     try:
         driver1.driver.find_element_by_id('CurrentAddress_0').click()
         time.sleep(2)

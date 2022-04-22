@@ -37,6 +37,23 @@ except Exception as er:
 
 
 
+ranges = [f"{data.list2_name}!A1:G1000"]
+try:
+    results = service.spreadsheets().values().batchGet(spreadsheetId=spreadsheetId,
+                                                       ranges=ranges,
+                                                       valueRenderOption='FORMATTED_VALUE',
+                                                       dateTimeRenderOption='FORMATTED_STRING').execute()
+    sheet_list2_info = results['valueRanges'][0]['values']
+    number_of_list2_lines = len(sheet_list2_info)
+    print(sheet_list2_info)
+    print(f'В таблице с результатами {len(sheet_list2_info)} строк')
+except Exception as er:
+    print('Ошибка !')
+    print('Невозможно получить данные из гугл таблицы!')
+    print(er)
+    exit()
+
+
 
 #
 # line_for_google = 1

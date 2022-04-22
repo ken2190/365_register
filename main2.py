@@ -6,7 +6,7 @@ from selenium.webdriver import ActionChains
 
 import data
 from chromdriver_class import ChromeDriver
-from get_users_data_from_google_sheets import sheet_user_values
+from get_users_data_from_google_sheets import sheet_user_values, number_of_list2_lines
 from random_for_registration import RandomDateRegister
 from google_sheets_writer import GoogleWriter1
 from profile_dir_worker import ProfileDirWorker1
@@ -27,7 +27,7 @@ except Exception as er:
 # GoogleWriter1.current_row = 2
 
 start_line = data.start_google_sheets_line - 1
-GoogleWriter1.current_row = data.start_google_sheets_line
+GoogleWriter1.current_row = number_of_list2_lines+1
 
 while True:
     if start_line >= len(sheet_user_values):

@@ -1,49 +1,34 @@
 import os
 import shutil
 
+from selenium import webdriver
+
 import data
 from chromdriver_class import ChromeDriver
+from profile_dir_worker import ProfileDirWorker1
 
 
-class ProfileDirWorker:
-    def __init__(self, path_to_profile_dir, profile_name, postfix='-copy'):
-        self.path_to_profile_dir = path_to_profile_dir
-        self.profile_name = profile_name
-        self.postfix = postfix
 
-        self.path_to_default_profile = os.path.join(path_to_profile_dir, profile_name)
-        self.path_to_new_profile = os.path.join(path_to_profile_dir, profile_name+postfix)
+class ChromeDriver:
+    def __init__(self,
+                 user_data_dir=data.path_to_chrome_user_dir,
+                 profile_directory=data.chrome_profile_name,
+                 ):
+        self.user_data_dir = user_data_dir
+        self.profile_directory = profile_directory
 
-        # print(self.path_to_new_profile)
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        options.add_experimental_option('useAutomationExtension', False)
+        options.add_argument(f'user-data-dir={self.user_data_dir}')
+        # options.add_argument('--enable-profile-shortcut-manager')
+        options.add_argument(f'--profile-directory={data.chrome_profile_name}-copy')
+        options.add_argument('--disable-blink-features=AutomationControlled')
 
-    def create_copy(self):
-        print(f'Создаём копию профиля {self.profile_name}')
-        copytree(self.path_to_default_profile, self.path_to_new_profile)
-        print('Копия профиля успешно создана')
+        # options.add_argument(r'user-data-dir=C:\Users\Sergey\AppData\Local\Google\Chrome\User Data\A_User')
 
-    def del_copy(self):
-        shutil.rmtree(self.path_to_new_profile)
-        print('Копия профиля успешно удалена')
+        self.driver = webdriver.Chrome(options=options)
 
-
-def copytree(src, dst, symlinks=False, ignore=None):
-    if not os.path.exists(dst):
-        os.makedirs(dst)
-    for item in os.listdir(src):
-        s = os.path.join(src, item)
-        d = os.path.join(dst, item)
-        if os.path.isdir(s):
-            copytree(s, d, symlinks, ignore)
-        else:
-            # try:
-            if not os.path.exists(d) or os.stat(s).st_mtime - os.stat(d).st_mtime > 1:
-                shutil.copy2(s, d)
-            # except:
-            #     pass
-
-
-ProfileDirWorker1 = ProfileDirWorker(path_to_profile_dir=data.path_to_chrome_user_dir,
-                                     profile_name=data.chrome_profile_name)
 
 # ProfileDirWorker1.create_copy()
 # driver1 = ChromeDriver()

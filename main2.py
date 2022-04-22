@@ -37,6 +37,10 @@ while True:
     user_data = sheet_user_values[start_line]
     print(f'Обработка аккаунта {start_line}/{len(sheet_user_values)-1}', '-'*100)
 
+    try:
+        ProfileDirWorker1.del_copy()
+    except Exception as er:
+        print(f'dir: {er}')
     print('Создаём копию профиля---------------')
     ProfileDirWorker1.create_copy()
 

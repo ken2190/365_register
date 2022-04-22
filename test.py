@@ -4,9 +4,7 @@ import shutil
 from selenium import webdriver
 
 import data
-from chromdriver_class import ChromeDriver
 from profile_dir_worker import ProfileDirWorker1
-
 
 
 class ChromeDriver:

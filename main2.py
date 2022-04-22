@@ -66,6 +66,13 @@ while True:
     except:
         pass
 
+    # выбор страны UK
+    select_obj = driver1.driver.find_element_by_id('Country')
+    driver1.select_element(select_obj, el_visible_text='United Kingdom')
+    time.sleep(3)
+    driver1.driver.find_element_by_id('Confirm').click()
+    time.sleep(10)
+
     # поле обращение Mr/Mrs
     if user_data[0] == 'F':
         select_obj = driver1.driver.find_element_by_id('Title')
@@ -160,7 +167,9 @@ while True:
     # новое (17.12.2021) ввод города
     try:
         element_CurrentTownCity = driver1.driver.find_element_by_id('CurrentTownCity')
-        driver1.human_input2_new(user_data[5], element_CurrentTownCity)
+        print(element_CurrentTownCity.get_attribute("value"))
+        if element_CurrentTownCity.get_attribute("value") == '':
+            driver1.human_input2_new(user_data[5], element_CurrentTownCity)
     except:
         print('Не удалось ввести город')
 

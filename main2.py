@@ -164,11 +164,11 @@ while True:
     # except:
     #     pass
     # driver1.human_input(user_data[5])
-    # try:
-    #     element_CurrentTownCity = driver1.driver.find_element_by_id('CurrentTownCity')
-    #     driver1.human_input2_new(user_data[5], element_CurrentTownCity)
-    # except:
-    #     print('Не удалось ввести город')
+    try:
+        element_CurrentTownCity = driver1.driver.find_element_by_id('CurrentTownCity')
+        driver1.human_input2_new(user_data[5], element_CurrentTownCity)
+    except:
+        print('Не удалось ввести город')
 
     time.sleep(random.randint(1, 3))
 

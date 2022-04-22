@@ -28,8 +28,8 @@ class ChromeDriver:
         self.driver = webdriver.Chrome(options=options)
 
 
-# ProfileDirWorker1.create_copy()
-# driver1 = ChromeDriver()
+ProfileDirWorker1.create_copy()
+driver1 = ChromeDriver()
 #
 # ProfileDirWorker1.del_copy()
 # path_to_chrome_user_dir = r'C:\Users\Sergey\AppData\Local\Google\Chrome\User Data\Default'

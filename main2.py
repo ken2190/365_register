@@ -127,7 +127,7 @@ while True:
     time.sleep(random.randint(2, 5))
 
     # заполнение адреса
-    adress_text = user_data[4].split(' ')[0]
+    adress_text = user_data[4]
     element_CurrentBuildingNumberSearch = driver1.driver.find_element_by_id('CurrentBuildingNumberSearch')
     driver1.driver.find_element_by_id('CurrentBuildingNumberSearch').send_keys('')
     driver1.human_input2_new(adress_text, element_CurrentBuildingNumberSearch)
@@ -135,12 +135,12 @@ while True:
     time.sleep(2)
     # input('1')
     # street
-    adress_text = user_data[4].split(' ')[1:]
-    adress_text = ' '.join(adress_text)
-    # print(adress_text)
-    element_CurrentStreetNameSearch = driver1.driver.find_element_by_id('CurrentStreetNameSearch')
-    driver1.human_input2_new(adress_text, element_CurrentStreetNameSearch)
-    time.sleep(2)
+    # adress_text = user_data[4].split(' ')[1:]
+    # adress_text = ' '.join(adress_text)
+    # # print(adress_text)
+    # element_CurrentStreetNameSearch = driver1.driver.find_element_by_id('CurrentStreetNameSearch')
+    # driver1.human_input2_new(adress_text, element_CurrentStreetNameSearch)
+    # time.sleep(2)
 
     # index адреса
     # input('Вводим postcode:')

@@ -67,7 +67,7 @@ while True:
         pass
 
     # поле обращение Mr/Mrs
-    if user_data[0] == 'Ж':
+    if user_data[0] == 'F':
         select_obj = driver1.driver.find_element_by_id('Title')
         driver1.select_element(select_obj, el_visible_text='Mrs')
 

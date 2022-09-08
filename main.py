@@ -305,7 +305,7 @@ while True:
     else:
         status_ = 'Порезан'
 
-    input()
+    # input()
     driver1.driver.close()
     driver1.driver.quit()
 

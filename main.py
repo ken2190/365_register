@@ -39,8 +39,16 @@ while True:
 
     print(f'Обработка аккаунта: {user_data}')
 
-
-    driver1 = ChromeDriverProxy()
+    try:
+        driver1 = ChromeDriverProxy()
+    except:
+        try:
+            driver1.driver.close()
+            driver1.driver.quit()
+        except:
+            pass
+        print('Не удалось запустить chrome')
+        continue
 
     driver1.driver.get('https://www.bet365.com/#/HO/')
     time.sleep(11)
@@ -59,8 +67,11 @@ while True:
         driver1.start_registration()
     except:
         print('Не удолось начать регистрировать аккаунт')
-        driver1.driver.close()
-        driver1.driver.quit()
+        try:
+            driver1.driver.close()
+            driver1.driver.quit()
+        except:
+            pass
         continue
 
     # выбор страны UK
@@ -71,11 +82,12 @@ while True:
     try:
         driver1.driver.find_element_by_class_name('oam-ConfirmButton ').click()
     except Exception as er:
-        print(f'Не удалось изменит страну: {er}')
+        pass
+        # print(f'Не удалось изменит страну: {er}')
     time.sleep(3)
 
     # поле обращение Mr/Mrs
-    if user_data[0] == 'MISS':
+    if user_data[0] == 'MISS' or user_data[0] == 'MS':
         select_obj = driver1.driver.find_element_by_id('title')
         driver1.select_element(select_obj, el_visible_text='Miss')
 
@@ -247,16 +259,26 @@ while True:
 
     # новая проверка на успешность <-
     is_good_account = True
+
     try:
-        frame = driver1.driver.find_element_by_id('MembersIframe')
-        driver1.driver.switch_to.frame(frame)
-        frame2 = driver1.driver.find_element_by_id('MembersHostFrame')
-        driver1.driver.switch_to.frame(frame2)
-        driver1.driver.find_element_by_class_name('accept-button')
-        print('Порезан')
         is_good_account = False
+        driver1.driver.find_element_by_class_name('oam-ErrorModal_Link ').click()
+        print('Уже зарегистрирован')
     except:
-        print('Готов к работе')
+        pass
+
+    if is_good_account:
+        try:
+            frame = driver1.driver.find_element_by_id('MembersIframe')
+            driver1.driver.switch_to.frame(frame)
+            frame2 = driver1.driver.find_element_by_id('MembersHostFrame')
+            driver1.driver.switch_to.frame(frame2)
+            driver1.driver.find_element_by_class_name('accept-button')
+            print('Порезан')
+            is_good_account = False
+        except:
+            print('Готов к работе')
+
 
     # новая проверка на успешность ->
 

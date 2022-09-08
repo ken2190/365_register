@@ -323,6 +323,7 @@ class ChromeDriverProxy(ChromeDriver):
             chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
             chrome_options.add_experimental_option('useAutomationExtension', False)
             chrome_options.add_argument('--disable-blink-features=AutomationControlled')
+            chrome_options.add_argument("--start-maximized")
 
             if use_proxy:
                 pluginfile = 'proxy_auth_plugin.zip'

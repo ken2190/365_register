@@ -6,18 +6,19 @@ from selenium.webdriver import ActionChains
 
 import data
 from chromdriver_class import ChromeDriverProxy
-from get_users_data_from_google_sheets import sheet_user_values, number_of_list2_lines
+# from get_users_data_from_google_sheets import sheet_user_values, number_of_list2_lines
 from random_for_registration import RandomDateRegister
-from google_sheets_writer import GoogleWriter1
+# from google_sheets_writer import GoogleWriter1
 
-CURENT_NUMBER = 1000
+from google_api_new import GoogleSheet
+# CURENT_NUMBER = 1000
 
-try:
-    GoogleWriter1.write_row(["Дата", "№", "Логин", "Пароль", "Пин", "Строка", "e-mail", "Статус"])
-except Exception as er:
-    print(er)
-    print('Ошибка, откройте доступ к странице')
-    exit()
+# try:
+#     GoogleWriter1.write_row(["Дата", "№", "Логин", "Пароль", "Пин", "Строка", "e-mail", "Статус"])
+# except Exception as er:
+#     print(er)
+#     print('Ошибка, откройте доступ к странице')
+#     exit()
 
 #
 # # c какой позиции читаем данные   1 -> вторая запись в таблице поле заголовков :)
@@ -25,22 +26,24 @@ except Exception as er:
 # # c какой позиции записываем данные  1 -> вторая запись в таблице поле заголовков
 # GoogleWriter1.current_row = 2
 
-start_line = data.start_google_sheets_line - 1
-GoogleWriter1.current_row = number_of_list2_lines+1
+# start_line = data.start_google_sheets_line - 1
+# GoogleWriter1.current_row = number_of_list2_lines+1
 
 while True:
-    if start_line >= len(sheet_user_values):
-        print('Все аккаунты зарегистрированы!')
-        break
+    google_api = GoogleSheet()
 
-    user_data = sheet_user_values[start_line]
-    print(f'Обработка аккаунта {start_line}/{len(sheet_user_values)-1}', '-'*100)
+    user_data = google_api.get_row_to_work()
+    if user_data == []:
+        print('Нет аккаутов для обработки')
+
+
+    print(f'Обработка аккаунта: {user_data}')
 
 
     driver1 = ChromeDriverProxy()
 
     driver1.driver.get('https://www.bet365.com/#/HO/')
-    time.sleep(10)
+    time.sleep(11)
     try:
         # Cookies
         driver1.driver.find_element_by_class_name('ccm-CookieConsentPopup_Accept ').click()
@@ -225,10 +228,10 @@ while True:
 
 
     # проматываем вниз
-    try:
-        driver1.driver.find_element_by_id('Submit').send_keys('')
-    except Exception as er:
-        print(er)
+    # try:
+    #     driver1.driver.find_element_by_id('Submit').send_keys('')
+    # except Exception as er:
+    #     print(er)
 
 
     # мне больше 18
@@ -238,9 +241,8 @@ while True:
     # конец регистрации !
     driver1.driver.find_element_by_class_name('oam-FieldSubmitButtonWithModal').click()
     time.sleep(45)
-    input('check:')
 
-    is_good = False
+    # is_good = False
     driver1.driver.switch_to.default_content()
 
     # новая проверка на успешность <-
@@ -254,58 +256,58 @@ while True:
         print('Порезан')
         is_good_account = False
     except:
-        pass
+        print('Готов к работе')
+
     # новая проверка на успешность ->
 
-    try:
-        frame = driver1.driver.find_element_by_id('MembersIframe')
-        driver1.driver.switch_to.frame(frame)
-        driver1.driver.find_element_by_class_name('nh-NavigationHeaderModule_Title ')
-        no_valid_flag = False
+    # try:
+    #     frame = driver1.driver.find_element_by_id('MembersIframe')
+    #     driver1.driver.switch_to.frame(frame)
+    #     driver1.driver.find_element_by_class_name('nh-NavigationHeaderModule_Title ')
+    #     no_valid_flag = False
+    #
+    #     try:
+    #         frame2 = driver1.driver.find_element_by_id('MembersHostFrame')
+    #         driver1.driver.switch_to.frame(frame2)
+    #
+    #         # уже есть аккаунт
+    #         try:
+    #             driver1.driver.find_element_by_class_name('duplicateAccountLightBox')
+    #             print('уже есть аккаунт')
+    #             no_valid_flag = True
+    #             raise Exception('Не рабочий аккунт')
+    #         except:
+    #             pass
+    #
+    #         try:
+    #             driver1.driver.find_element_by_class_name('payment-header-details-title')
+    #             print('блок внесите деньги - есть')
+    #         except:
+    #             print('блок внесите деньги - нет')
+    #             no_valid_flag = True
+    #             raise Exception('Не рабочий аккунт')
+    #
+    #         driver1.driver.find_element_by_class_name('withdrawal-restriction')
+    #         print('порезан2')
+    #         no_valid_flag = True
+    #     except:
+    #         pass
+    #
+    #     if no_valid_flag:
+    #         raise Exception('Не рабочий аккунт')
+    #     print('Рабочий аккаунт')
+    #     is_good = True
+    # except:
+    #     print('Порезан')
 
-        try:
-            frame2 = driver1.driver.find_element_by_id('MembersHostFrame')
-            driver1.driver.switch_to.frame(frame2)
-
-            # уже есть аккаунт
-            try:
-                driver1.driver.find_element_by_class_name('duplicateAccountLightBox')
-                print('уже есть аккаунт')
-                no_valid_flag = True
-                raise Exception('Не рабочий аккунт')
-            except:
-                pass
-
-            try:
-                driver1.driver.find_element_by_class_name('payment-header-details-title')
-                print('блок внесите деньги - есть')
-            except:
-                print('блок внесите деньги - нет')
-                no_valid_flag = True
-                raise Exception('Не рабочий аккунт')
-
-            driver1.driver.find_element_by_class_name('withdrawal-restriction')
-            print('порезан2')
-            no_valid_flag = True
-        except:
-            pass
-
-        if no_valid_flag:
-            raise Exception('Не рабочий аккунт')
-        print('Рабочий аккаунт')
-        is_good = True
-    except:
-        print('Порезан')
-
-    if is_good:
+    if is_good_account:
         status_ = 'Готов к работе'
     else:
         status_ = 'Порезан'
 
-
+    input()
     driver1.driver.close()
     driver1.driver.quit()
-    start_line += 1
 
 
     # время
@@ -314,20 +316,19 @@ while True:
 
     data_ = [
         str(current_date_string), # time now
-        CURENT_NUMBER + start_line, # number
         login_, # login
         password_, # password
-        pincode_, # pin
         ' '.join(user_data), # строка с информацией о пользователе
         email_, # email
         status_
     ]
     print(data_)
-    GoogleWriter1.write_row(data_)
+    google_api.add_row_to_second_table(data_)
+    google_api.update_info_finish_row()
 
-    print(f'Аккаунт {start_line-1}/{len(sheet_user_values)-1} успешно обработан', '-'*100)
+    print(f'Аккаунт успешно обработан', '-'*100)
+    # input()
 
 
 print('End.')
-# driver1.select_in_selection()
 

@@ -142,8 +142,8 @@ class FireFoxDriverWithVPN():
 
 class ChromeDriver:
     def __init__(self,
-                 user_data_dir=data.path_to_chrome_user_dir,
-                 profile_directory=data.chrome_profile_name,
+                 user_data_dir,
+                 profile_directory,
                  ):
         self.user_data_dir = user_data_dir
         self.profile_directory = profile_directory
@@ -340,10 +340,13 @@ class ChromeDriverProxy(ChromeDriver):
 
 
         self.driver = get_chromedriver(use_proxy=True)
-        self.driver.get('https://2ip.ru')  # any url you want to crawl
-        time.sleep(5)
+        self.driver.get('https://2ip.ru', )  # any url you want to crawl
+        time.sleep(2)
         self.driver.get('http://node-gb-10.astroproxy.com:10889/api/changeIP?apiToken=4c02390e9670aef9')
         time.sleep(5)
+        self.driver.get('https://2ip.ru')  # any url you want to crawl
+        time.sleep(5)
+
 
 if __name__ == '__main__':
     p1 = ChromeDriverProxy()

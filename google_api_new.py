@@ -57,7 +57,7 @@ class GoogleSheet:
     def add_row_to_second_table(self, row):
         rows = self.get_all_values_from_worksheet2()
         rows.append(row)
-        print(rows)
+        # print(rows)
         self.worksheet2.update('A1', rows)
 
 

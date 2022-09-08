@@ -1,39 +1,95 @@
 import os
-import shutil
+import zipfile
 
 from selenium import webdriver
 
-import data
-from profile_dir_worker import ProfileDirWorker1
+# 198.244.211.60:10889:avraint5716:698de1
+PROXY_HOST = '198.244.211.60'  # rotating proxy or host
+PROXY_PORT = 10889 # port
+PROXY_USER = 'avraint5716' # username
+PROXY_PASS = '698de1' # password
 
 
-class ChromeDriver:
-    def __init__(self,
-                 user_data_dir=data.path_to_chrome_user_dir,
-                 profile_directory=data.chrome_profile_name,
-                 ):
-        self.user_data_dir = user_data_dir
-        self.profile_directory = profile_directory
+manifest_json = """
+{
+    "version": "1.0.0",
+    "manifest_version": 2,
+    "name": "Chrome Proxy",
+    "permissions": [
+        "proxy",
+        "tabs",
+        "unlimitedStorage",
+        "storage",
+        "<all_urls>",
+        "webRequest",
+        "webRequestBlocking"
+    ],
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "minimum_chrome_version":"22.0.0"
+}
+"""
 
-        options = webdriver.ChromeOptions()
-        options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        options.add_experimental_option('useAutomationExtension', False)
-        options.add_argument(f'user-data-dir={self.user_data_dir}')
-        # options.add_argument('--enable-profile-shortcut-manager')
-        options.add_argument(f'--profile-directory={data.chrome_profile_name}-copy')
-        options.add_argument('--disable-blink-features=AutomationControlled')
+background_js = """
+var config = {
+        mode: "fixed_servers",
+        rules: {
+        singleProxy: {
+            scheme: "http",
+            host: "%s",
+            port: parseInt(%s)
+        },
+        bypassList: ["localhost"]
+        }
+    };
 
-        # options.add_argument(r'user-data-dir=C:\Users\Sergey\AppData\Local\Google\Chrome\User Data\A_User')
+chrome.proxy.settings.set({value: config, scope: "regular"}, function() {});
 
-        self.driver = webdriver.Chrome(options=options)
+function callbackFn(details) {
+    return {
+        authCredentials: {
+            username: "%s",
+            password: "%s"
+        }
+    };
+}
+
+chrome.webRequest.onAuthRequired.addListener(
+            callbackFn,
+            {urls: ["<all_urls>"]},
+            ['blocking']
+);
+""" % (PROXY_HOST, PROXY_PORT, PROXY_USER, PROXY_PASS)
 
 
-ProfileDirWorker1.create_copy()
-driver1 = ChromeDriver()
-#
-# ProfileDirWorker1.del_copy()
-# path_to_chrome_user_dir = r'C:\Users\Sergey\AppData\Local\Google\Chrome\User Data\Default'
-#
-# dst = r'D:\\dir12'
-#
-# copytree(path_to_chrome_user_dir, dst)
+def get_chromedriver(use_proxy=False, user_agent=None):
+    path = os.path.dirname(os.path.abspath(__file__))
+    chrome_options = webdriver.ChromeOptions()
+    # chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    chrome_options.add_experimental_option('useAutomationExtension', False)
+    chrome_options.add_argument('--disable-blink-features=AutomationControlled')
+
+    if use_proxy:
+        pluginfile = 'proxy_auth_plugin.zip'
+
+        with zipfile.ZipFile(pluginfile, 'w') as zp:
+            zp.writestr("manifest.json", manifest_json)
+            zp.writestr("background.js", background_js)
+        chrome_options.add_extension(pluginfile)
+    if user_agent:
+        chrome_options.add_argument('--user-agent=%s' % user_agent)
+    driver = webdriver.Chrome(
+        os.path.join(path, 'chromedriver'),
+        chrome_options=chrome_options)
+    return driver
+
+def main():
+    driver = get_chromedriver(use_proxy=True)
+    driver.get('https://2ip.ru')  # any url you want to crawl
+    input()
+
+if __name__ == '__main__':
+    main()
+

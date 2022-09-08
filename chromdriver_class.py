@@ -1,10 +1,13 @@
+import select
+
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
-
-from selenium import webdriver
 import time
 import data
 import random
+import os
+import zipfile
+from selenium import webdriver
 from multiprocessing.dummy import Pool
 
 
@@ -148,28 +151,40 @@ class ChromeDriver:
         options = webdriver.ChromeOptions()
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option('useAutomationExtension', False)
-        options.add_argument(f'user-data-dir={self.user_data_dir}')
+        #options.add_argument(f'user-data-dir={self.user_data_dir}')
         # options.add_argument(f"profile-directory={self.profile_directory}")
         # options.add_argument(f"--incognito")
         # options.add_argument(f'allow-profiles-outside-user-dir')
 
         # options.add_argument('--allow-profiles-outside-user-dir')
         # options.add_argument('--enable-profile-shortcut-manager')
-        options.add_argument(f'--profile-directory={data.chrome_profile_name}-copy')
+        #options.add_argument(f'--profile-directory={data.chrome_profile_name}-copy')
         options.add_argument('--disable-blink-features=AutomationControlled')
 
         # options.add_argument(r'user-data-dir=C:\Users\Sergey\AppData\Local\Google\Chrome\User Data\A_User')
+        # 198.244.211.60:10889:avraint5716:698de1
+        #http://username@password:196.19.8.88:8000
+        #http://avraint5716@698de1:198.244.211.60:10889
+        options.add_argument(f'--proxy-server=198.244.211.60:10889')
 
         self.driver = webdriver.Chrome(options=options)
+        self.driver.get('https://2ip.ru/')
+        input('Введите логин и пароль (avraint5716:698de1):')
+
 
     def start_registration(self):
         time.sleep(4)
         self.driver.find_element_by_class_name('hm-MainHeaderRHSLoggedOutWide_Join').click()
         time.sleep(10)
-        self.driver.switch_to.frame(self.driver.find_element_by_class_name('mim-MembersIframeModule_Iframe '))
+
+        # self.driver.switch_to.frame(self.driver.find_element_by_class_name('mim-MembersIframeModule_Iframe '))
+        # time.sleep(1)
+        # self.driver.switch_to.frame(self.driver.find_element_by_class_name('lm-LegacyModule_IFrame '))
+        # time.sleep(1)
+        self.driver.switch_to.frame(self.driver.find_element_by_id('MembersIframe'))
         time.sleep(1)
-        self.driver.switch_to.frame(self.driver.find_element_by_class_name('lm-LegacyModule_IFrame '))
-        time.sleep(1)
+
+
 
     def human_input(self, input_text):
         '''Вводит текс, предварительно нужно нажать на форму'''
@@ -240,4 +255,97 @@ class ChromeDriver:
         self.driver.close()
         # self.driver.switch_to.window(current_window)
         self.driver.switch_to.default_content()
+
+
+class ChromeDriverProxy(ChromeDriver):
+    def __init__(self,):
+        PROXY_HOST = data.PROXY_HOST
+        PROXY_PORT = data.PROXY_PORT
+        PROXY_USER = data.PROXY_USER
+        PROXY_PASS = data.PROXY_PASS
+
+        manifest_json = """
+        {
+            "version": "1.0.0",
+            "manifest_version": 2,
+            "name": "Chrome Proxy",
+            "permissions": [
+                "proxy",
+                "tabs",
+                "unlimitedStorage",
+                "storage",
+                "<all_urls>",
+                "webRequest",
+                "webRequestBlocking"
+            ],
+            "background": {
+                "scripts": ["background.js"]
+            },
+            "minimum_chrome_version":"22.0.0"
+        }
+        """
+
+        background_js = """
+        var config = {
+                mode: "fixed_servers",
+                rules: {
+                singleProxy: {
+                    scheme: "http",
+                    host: "%s",
+                    port: parseInt(%s)
+                },
+                bypassList: ["localhost"]
+                }
+            };
+
+        chrome.proxy.settings.set({value: config, scope: "regular"}, function() {});
+
+        function callbackFn(details) {
+            return {
+                authCredentials: {
+                    username: "%s",
+                    password: "%s"
+                }
+            };
+        }
+
+        chrome.webRequest.onAuthRequired.addListener(
+                    callbackFn,
+                    {urls: ["<all_urls>"]},
+                    ['blocking']
+        );
+        """ % (PROXY_HOST, PROXY_PORT, PROXY_USER, PROXY_PASS)
+
+        def get_chromedriver(use_proxy=False, user_agent=None):
+            path = os.path.dirname(os.path.abspath(__file__))
+            chrome_options = webdriver.ChromeOptions()
+            # chrome_options = webdriver.ChromeOptions()
+            chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+            chrome_options.add_experimental_option('useAutomationExtension', False)
+            chrome_options.add_argument('--disable-blink-features=AutomationControlled')
+
+            if use_proxy:
+                pluginfile = 'proxy_auth_plugin.zip'
+
+                with zipfile.ZipFile(pluginfile, 'w') as zp:
+                    zp.writestr("manifest.json", manifest_json)
+                    zp.writestr("background.js", background_js)
+                chrome_options.add_extension(pluginfile)
+            if user_agent:
+                chrome_options.add_argument('--user-agent=%s' % user_agent)
+            driver = webdriver.Chrome(
+                os.path.join(path, 'chromedriver'),
+                chrome_options=chrome_options)
+            return driver
+
+
+        self.driver = get_chromedriver(use_proxy=True)
+        self.driver.get('https://2ip.ru')  # any url you want to crawl
+        time.sleep(5)
+        self.driver.get('http://node-gb-10.astroproxy.com:10889/api/changeIP?apiToken=4c02390e9670aef9')
+        time.sleep(5)
+
+if __name__ == '__main__':
+    p1 = ChromeDriverProxy()
+
 

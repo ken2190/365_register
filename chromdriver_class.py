@@ -342,7 +342,7 @@ class ChromeDriverProxy(ChromeDriver):
         self.driver = get_chromedriver(use_proxy=True)
         self.driver.get('https://2ip.ru', )  # any url you want to crawl
         time.sleep(2)
-        self.driver.get('http://node-gb-10.astroproxy.com:10889/api/changeIP?apiToken=4c02390e9670aef9')
+        self.driver.get(data.change_api_url)
         time.sleep(5)
         self.driver.get('https://2ip.ru')  # any url you want to crawl
         time.sleep(5)

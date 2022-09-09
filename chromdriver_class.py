@@ -340,6 +340,9 @@ class ChromeDriverProxy(ChromeDriver):
 
 
         self.driver = get_chromedriver(use_proxy=True)
+        # сворачивание окна
+        self.driver.minimize_window()
+
         self.driver.get('https://2ip.ru', )  # any url you want to crawl
         time.sleep(2)
         self.driver.get(data.change_api_url)
@@ -350,5 +353,5 @@ class ChromeDriverProxy(ChromeDriver):
 
 if __name__ == '__main__':
     p1 = ChromeDriverProxy()
-
+    input()
 

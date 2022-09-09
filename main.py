@@ -50,7 +50,14 @@ while True:
         print('Не удалось запустить chrome')
         continue
 
-    driver1.driver.get('https://www.bet365.com/#/HO/')
+    try:
+        driver1.driver.get('https://www.bet365.com/#/HO/')
+    except:
+        print('Не удалось открыть bet365')
+        driver1.driver.close()
+        driver1.driver.quit()
+        continue
+
     time.sleep(11)
     try:
         # Cookies
@@ -75,7 +82,17 @@ while True:
         continue
 
     # выбор страны UK
-    select_obj = driver1.driver.find_element_by_id('country_residence')
+    try:
+        select_obj = driver1.driver.find_element_by_id('country_residence')
+    except:
+        time.sleep(10)
+        try:
+            select_obj = driver1.driver.find_element_by_id('country_residence')
+        except:
+            driver1.driver.close()
+            driver1.driver.quit()
+            print('Не удалось начать регистрировать аккаунт')
+            continue
     driver1.select_element(select_obj, el_visible_text='United Kingdom')
     time.sleep(3)
     # driver1.driver.find_element_by_id('Confirm').click()
@@ -87,9 +104,15 @@ while True:
     time.sleep(3)
 
     # поле обращение Mr/Mrs
-    if user_data[0] == 'MISS' or user_data[0] == 'MS':
+    if user_data[0] == 'MISS':
         select_obj = driver1.driver.find_element_by_id('title')
         driver1.select_element(select_obj, el_visible_text='Miss')
+    elif user_data[0] == 'MS':
+        select_obj = driver1.driver.find_element_by_id('title')
+        driver1.select_element(select_obj, el_visible_text='Ms')
+    elif user_data[0] == 'MRS':
+        select_obj = driver1.driver.find_element_by_id('title')
+        driver1.select_element(select_obj, el_visible_text='Mrs')
 
     time.sleep(4)
     # ввод 1 имени
@@ -109,7 +132,14 @@ while True:
     # driver1.human_input(user_data[2])
 
     # ввод даты рождения
-    day, month, year = user_data[3].split('.')
+    if '.' in user_data[3]:
+        day, month, year = user_data[3].split('.')
+    elif '/' in user_data[3]:
+        day, month, year = user_data[3].split('/')
+    else:
+        print(user_data[3], '- неверный формат даты')
+        break
+
     day = str(int(day))
     month = str(int(month))
 
@@ -238,13 +268,11 @@ while True:
     time.sleep(random.randint(40, 50)/10)
     print(f'password: {password_}')
 
-
     # проматываем вниз
     # try:
     #     driver1.driver.find_element_by_id('Submit').send_keys('')
     # except Exception as er:
     #     print(er)
-
 
     # мне больше 18
     driver1.driver.find_element_by_class_name('oam-FieldInputCheckboxTerms_Checkbox ').click()
@@ -254,21 +282,22 @@ while True:
     driver1.driver.find_element_by_class_name('oam-FieldSubmitButtonWithModal').click()
     time.sleep(45)
 
-    # is_good = False
-    driver1.driver.switch_to.default_content()
-
     # новая проверка на успешность <-
     is_good_account = True
+    is_exist = False
 
     try:
-        is_good_account = False
-        driver1.driver.find_element_by_class_name('oam-ErrorModal_Link ').click()
+        driver1.driver.find_element_by_class_name('oam-ErrorModal_Link ')
         print('Уже зарегистрирован')
-    except:
-        pass
+        is_good_account = False
+        is_exist = True
+    except Exception as er:
+        print(er)
 
     if is_good_account:
         try:
+            driver1.driver.switch_to.default_content()
+            time.sleep(1)
             frame = driver1.driver.find_element_by_id('MembersIframe')
             driver1.driver.switch_to.frame(frame)
             frame2 = driver1.driver.find_element_by_id('MembersHostFrame')
@@ -282,52 +311,15 @@ while True:
 
     # новая проверка на успешность ->
 
-    # try:
-    #     frame = driver1.driver.find_element_by_id('MembersIframe')
-    #     driver1.driver.switch_to.frame(frame)
-    #     driver1.driver.find_element_by_class_name('nh-NavigationHeaderModule_Title ')
-    #     no_valid_flag = False
-    #
-    #     try:
-    #         frame2 = driver1.driver.find_element_by_id('MembersHostFrame')
-    #         driver1.driver.switch_to.frame(frame2)
-    #
-    #         # уже есть аккаунт
-    #         try:
-    #             driver1.driver.find_element_by_class_name('duplicateAccountLightBox')
-    #             print('уже есть аккаунт')
-    #             no_valid_flag = True
-    #             raise Exception('Не рабочий аккунт')
-    #         except:
-    #             pass
-    #
-    #         try:
-    #             driver1.driver.find_element_by_class_name('payment-header-details-title')
-    #             print('блок внесите деньги - есть')
-    #         except:
-    #             print('блок внесите деньги - нет')
-    #             no_valid_flag = True
-    #             raise Exception('Не рабочий аккунт')
-    #
-    #         driver1.driver.find_element_by_class_name('withdrawal-restriction')
-    #         print('порезан2')
-    #         no_valid_flag = True
-    #     except:
-    #         pass
-    #
-    #     if no_valid_flag:
-    #         raise Exception('Не рабочий аккунт')
-    #     print('Рабочий аккаунт')
-    #     is_good = True
-    # except:
-    #     print('Порезан')
-
-    if is_good_account:
+    if is_exist:
+        status_ = 'Дубль'
+    elif is_good_account:
         status_ = 'Готов к работе'
     else:
         status_ = 'Порезан'
 
-    # input()
+    print(status_)
+    input()
     driver1.driver.close()
     driver1.driver.quit()
 

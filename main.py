@@ -319,7 +319,7 @@ while True:
         status_ = 'Порезан'
 
     print(status_)
-    input()
+    # input()
     driver1.driver.close()
     driver1.driver.quit()
 

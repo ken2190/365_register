@@ -41,13 +41,13 @@ while True:
 
     try:
         driver1 = ChromeDriverProxy()
-    except:
+    except Exception as er:
         try:
             driver1.driver.close()
             driver1.driver.quit()
         except:
             pass
-        print('Не удалось запустить chrome')
+        print(f'Не удалось запустить chrome: {er}')
         continue
 
     try:

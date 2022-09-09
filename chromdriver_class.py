@@ -334,8 +334,7 @@ class ChromeDriverProxy(ChromeDriver):
                 chrome_options.add_extension(pluginfile)
             if user_agent:
                 chrome_options.add_argument('--user-agent=%s' % user_agent)
-            driver = webdriver.Chrome(
-                os.path.join(path, 'chromedriver'),
+            driver = webdriver.Chrome(data.path_to_chromedriver,
                 chrome_options=chrome_options)
             return driver
 
